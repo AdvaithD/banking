@@ -1,0 +1,41 @@
+.dib {
+    display: inline-block;
+}
+
+.b {
+    font-weight: bold;
+}
+
+.pa3 {
+    padding: 1rem;
+}
+
+.ml0 {
+    margin-left: 0;
+}
+
+.mr5 {
+    margin-right: 4rem;
+}
+
+.f3 {
+    font-size: 1.5rem;
+}
+
+.f6 {
+    font-size: .875rem;
+}
+
+@media screen and (min-width: 30em) {
+    .pa5-ns {
+        padding: 4rem;
+    }
+
+    .f2-ns {
+        font-size: 2.25rem;
+    }
+
+    .f5-ns {
+        font-size: 1rem;
+    }
+}
