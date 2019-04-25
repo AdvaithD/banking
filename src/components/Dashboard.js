@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import Nav from './Nav';
 class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            books: []
+            books: [],
+            action: 'DEPOSIT'
           };
     }
 
@@ -27,33 +29,25 @@ class Dashboard extends Component {
         localStorage.removeItem('jwtToken');
         window.location.reload();
       }
-    render() { 
-        return ( <div className="dashboard code">
-        <nav class="flex justify-between bb b--white-10">
-  <a class="link white-70 hover-white no-underline flex items-center pa3" href="">
-    <svg
-      class="dib h1 w1"
-      data-icon="grid"
-      viewBox="0 0 32 32"
-      style={{fill: 'currentcolor'}}>
-      <title>Super Normal Icon Mark</title>
-      <path d="M2 2 L10 2 L10 10 L2 10z M12 2 L20 2 L20 10 L12 10z M22 2 L30 2 L30 10 L22 10z M2 12 L10 12 L10 20 L2 20z M12 12 L20 12 L20 20 L12 20z M22 12 L30 12 L30 20 L22 20z M2 22 L10 22 L10 30 L2 30z M12 22 L20 22 L20 30 L12 30z M22 22 L30 22 L30 30 L22 30z">
-      </path>
-    </svg>
-  </a>
-  <div class="flex-grow pa3 flex items-center">
-    <a class="f6 link dib white dim mr3 mr4-ns" href="#0">About</a>
-    <a class="f6 link dib white dim mr3 mr4-ns" href="#0">Sign In</a>
-    <a class="f6 dib white bg-animate hover-bg-white hover-black no-underline pv2 ph4 br-pill ba b--white-20" href="#0">Sign Up</a>
-  </div>
-</nav>
 
-        BOOK CATALOG &nbsp;
-              {localStorage.getItem('jwtToken') &&
+    withdraw () {
+      this.setState({ action: 'WITHDRAW' });
+    }
+    deposit () {
+      this.setState({ action: 'DEPOSIT' });
+    }
+    
+    render() { 
+      let signedIn = localStorage.getItem('jwtToken')
+        return ( <div className="dashboard code">
+        <Nav />
+
+        {/* Spartan Banking */}
+              {/* {localStorage.getItem('jwtToken') &&
               <a class="f6 link dim ph3 pv2 mb2 dib white bg-black" href="#0" onClick={this.logout}>Logout</a>
-              }
-              <table class="table table-stripe">
-              <thead>
+              } */}
+              {/* <table class="table table-stripe"> */}
+              {/* <thead>
                 <tr>
                   <th>ISBN</th>
                   <th>Title</th>
@@ -69,20 +63,60 @@ class Dashboard extends Component {
                   </tr>
                 )}
               </tbody>
-            </table>
+            </table> */}
 <div className="info">
-<article class="center mw5 mw6-ns hidden ba mv4">
+<article class="mw5 mw6-ns hidden ba mv4">
   <h1 class="f4 bg-near-black white mv0 pv2 ph3">Account Info</h1>
   <div class="pa3 bt">
     <p class="f6 f5-ns lh-copy measure mv0">
        Balance : $10,000 <br/>
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Withdraw</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" >Withdraw</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Deposit</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Transfer</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
 
     </p>
   </div>
 </article>
+
+<div class="flex justify-around">
+  {/* <div class="outline w-25 pa3 mr2"> */}
+  <article class="mw5 mw6-ns hidden ba mv4">
+  <h1 class="f4 bg-near-black white mv0 pv2 ph3">Actions</h1>
+  <div class="pa3 bt">
+    <p class="f6 f5-ns lh-copy measure mv0">
+       {/* Balance : $10,000 <br/> */}
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" >Withdraw</a> 
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Deposit</a> 
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Transfer</a> 
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
+
+    </p>
+  </div>
+</article>
+  {/* </div> */}
+  <div>
+          <form action="sign-up_submit" method="get" accept-charset="utf-8">
+            <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
+              <legend class="ph0 mh0 fw6 clip">Sign Up</legend>
+              <div class="mt3">
+                <label class="db fw4 lh-copy f6" for="email-address">Withdraw Amount</label>
+                <input class="pa2 input-reset ba bg-transparent w-100 measure" type="email" name="email-address" id="email-address" />
+              </div>
+              <div class="mt3">
+                <label class="db fw4 lh-copy f6" for="password">Confirm</label>
+                <input class="b pa2 input-reset ba bg-transparent" type="password" name="password" id="password" />
+              </div>
+            </fieldset>
+            <div class="mt3"><input class="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" type="submit" value="Confirm" /></div>
+          </form>
+        </div>
+  <div class="outline w-25 pa3 mr2">
+    <code>3</code>
+  </div>
+</div>
+
 
 </div>
             <footer class="pa4 pa5-l black-70 bt b--black-10">
