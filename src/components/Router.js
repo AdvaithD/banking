@@ -5,13 +5,13 @@ import Signup from './Signup'
 import Login from './Login'
 import Dashboard from './Dashboard'
 
-const Router = () => (
+const Router = ({ onLogin, user }) => (
   <BrowserRouter>
     <Switch>
       <Route exact path="/" component={App}/>
       <Route path="/signup" component={Signup}/>
-      <Route path='/login' component={Login} />
-      <Route path='/app' component={Dashboard} />
+      <Route path='/login' render={ () => <Login onLogin={onLogin} />} />
+      <Route path='/app' render={ () => <Dashboard user={user}/>} />
 
     </Switch>
   </BrowserRouter>

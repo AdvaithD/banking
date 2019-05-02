@@ -6,7 +6,7 @@ class Action extends Component {
     // this.state = { action: 'WITHDRAW' }
   }
   render () {
-    let action = this.props
+    let { action } = this.props
 
     if (action == 'WITHDRAW') {
       return (

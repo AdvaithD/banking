@@ -4,10 +4,11 @@ import './index.css'
 // import App from './App';
 import Router from './components/Router'
 import Dashboard from './components/Dashboard'
+import Root from './components/Root'
 import './tachyons.min.css'
 import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render(<Router />, document.getElementById('root'))
+ReactDOM.render(<Root />, document.getElementById('root'))
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

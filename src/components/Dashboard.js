@@ -7,19 +7,23 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             books: [],
-            action: 'DEPOSIT'
+            
+            action: 'DEPOSIT',
+            from: null,
+            to: null,
+            amount: null
           };
     }
 
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
-        axios.get('/api/book')
+        axios.get('http://localhost:5000/api/book')
           .then(res => {
             this.setState({ books: res.data });
             console.log(this.state.books);
           })
           .catch((error) => {
-            if(error.response.status === 401) {
+            if(error.response && error.response.status === 401) {
               this.props.history.push("/login");
             }
           });
@@ -30,14 +34,31 @@ class Dashboard extends Component {
         window.location.reload();
       }
 
-    withdraw () {
+      onChange = (e) => {
+        const state = this.state
+        state[e.target.name] = e.target.value;
+        this.setState(state);
+      }
+    withdraw = () => {
       this.setState({ action: 'WITHDRAW' });
     }
-    deposit () {
+    deposit = () => {
       this.setState({ action: 'DEPOSIT' });
+    }
+    depositMoney = (e) => {
+      e.preventDefault()
+      const { from, to, amount } = this.state;
+      console.log('New transfer')
+      axios.post('/api/txn/', { from, to, amount })
+      .then((result) => {
+        console.log('result')
+      });
+
     }
     
     render() { 
+      console.log(this.props.user)
+      const { from, to, amount } = this.state;
       let signedIn = localStorage.getItem('jwtToken')
         return ( <div className="dashboard code">
         <Nav />
@@ -70,8 +91,8 @@ class Dashboard extends Component {
   <div class="pa3 bt">
     <p class="f6 f5-ns lh-copy measure mv0">
        Balance : $10,000 <br/>
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" >Withdraw</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Deposit</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.withdraw}>Withdraw</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.deposit}>Deposit</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Transfer</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
 
     </p>
@@ -97,19 +118,26 @@ class Dashboard extends Component {
 </article>
   {/* </div> */}
   <div>
-          <form action="sign-up_submit" method="get" accept-charset="utf-8">
+          <form accept-charset="utf-8" onSubmit={this.deposit}>
             <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
-              <legend class="ph0 mh0 fw6 clip">Sign Up</legend>
+              <legend class="ph0 mh0 fw6 clip">Transfer</legend>
               <div class="mt3">
-                <label class="db fw4 lh-copy f6" for="email-address">Withdraw Amount</label>
-                <input class="pa2 input-reset ba bg-transparent w-100 measure" type="email" name="email-address" id="email-address" />
+                <label class="db fw4 lh-copy f6" for="email-address">Transfer Amount</label>
+                <input class="pa2 input-reset ba bg-transparent w-100 measure" type="number" name="amount" id="email-address" value={amount} onChange={this.onChange}/>
               </div>
               <div class="mt3">
-                <label class="db fw4 lh-copy f6" for="password">Confirm</label>
-                <input class="b pa2 input-reset ba bg-transparent" type="password" name="password" id="password" />
+                <label class="db fw4 lh-copy f6" for="email-address">From</label>
+                <input class="pa2 input-reset ba bg-transparent w-100 measure" type="text" name="from" id="email-address" value={from} onChange={this.onChange} required/>
               </div>
+              <div class="mt3">
+                <label class="db fw4 lh-copy f6" for="email-address">To</label>
+                <input class="pa2 input-reset ba bg-transparent w-100 measure" type="text" name="to" id="email-address" value={to} onChange={this.onChange} required/>
+              </div>
+              
             </fieldset>
-            <div class="mt3"><input class="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" type="submit" value="Confirm" /></div>
+            <a class="f6 link dim ph3 pv2 mb2 dib white bg-black" onClick={this.depositMoney}>Transfer</a>
+
+            {/* <button onClick={this.depositMoney}></button> */}
           </form>
         </div>
   <div class="outline w-25 pa3 mr2">

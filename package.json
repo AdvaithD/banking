@@ -7,6 +7,7 @@
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
+    "bootstrap": "^4.3.1",
     "express": "^4.16.4",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.4.0",

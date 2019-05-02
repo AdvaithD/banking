@@ -2,6 +2,15 @@ var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 var bcrypt = require('bcrypt-nodejs')
 
+var TransactionSchema = new mongoose.Schema({
+  from: { type: String,
+    unique: false },
+  to: { type: String,
+    unique: false },
+  amount: { type: Number },
+  timestamp: { type: Date, default: Date.now }
+})
+
 var UserSchema = new Schema({
   username: {
     type: String,
@@ -11,7 +20,10 @@ var UserSchema = new Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  balance: Number,
+  transactions: [TransactionSchema]
+
 })
 
 UserSchema.pre('save', function (next) {
