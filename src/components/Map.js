@@ -3,7 +3,9 @@ import StickyNav from './StickyNav';
 import axios from 'axios'
 // import './css/Signup.css'
 
-class Signup extends Component {
+const apikey = 'AIzaSyCrode7wSxsfPX4IlbaVh2veVDC8ab0nRc'
+
+class Map extends Component {
   constructor() {
     super();
     this.state = {
@@ -31,9 +33,9 @@ class Signup extends Component {
   render() { 
     const { username, password } = this.state;
     return ( 
-      <article class="vh-100 dt w-100 bg-white code">
+      <article class="vh-100 dt w-100 bg-dark-blue code">
         <div class="dtc v-mid tc white ph3 ph4-l">
-        <h1 className="f1 black">Signup for Spartan Banking!</h1>
+        <h1 className="f1">Find Nearby ATM</h1>
           <article class="pa4 black-80 code center">
             <form action="sign-up_submit" method="get" accept-charset="utf-8" onSubmit={this.onSubmit}>
               <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
@@ -60,4 +62,4 @@ class Signup extends Component {
   }
 }
  
-export default Signup;
+export default Map;

@@ -21,7 +21,8 @@ var UserSchema = new Schema({
     type: String,
     required: true
   },
-  balance: Number,
+  checkingBalance: { type: Number, default: 250 },
+  savingsBalance: { type: Number, default: 500 },
   transactions: [TransactionSchema]
 
 })

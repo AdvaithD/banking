@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import Nav from './Nav';
+import Action from './Action';
 class Dashboard extends Component {
     constructor(props) {
         super(props);
@@ -11,7 +12,10 @@ class Dashboard extends Component {
             action: 'DEPOSIT',
             from: null,
             to: null,
-            amount: null
+            amount: null,
+            savingsBal: null,
+            checkingBal: null,
+            transactions: []
           };
     }
 
@@ -45,15 +49,40 @@ class Dashboard extends Component {
     deposit = () => {
       this.setState({ action: 'DEPOSIT' });
     }
+    transfer = () => {
+      this.setState({ action: 'TRANSFER' });
+    }
+    // depositMoney = (e) => {
+    //   e.preventDefault()
+    //   const { from, to, amount } = this.state;
+    //   console.log('New transfer')
+    //   axios.post('/api/txn/', { from, to, amount })
+    //   .then((result) => {
+    //     console.log('result')
+    //   });
+
+    // }
+    withdrawMoney = (e) => {
+      e.preventDefault()
+      // this.setState({ action: 'WITHDRAW' });
+      const {amount} = this.state
+      const {username} = this.props.user
+      axios.post('/api/withdraw', {amount, username})
+      .then((result) => {
+        console.log('WITHDRAW COMPLETED', result)
+        
+      })
+    }
     depositMoney = (e) => {
       e.preventDefault()
-      const { from, to, amount } = this.state;
-      console.log('New transfer')
-      axios.post('/api/txn/', { from, to, amount })
+      // this.setState({ action: 'WITHDRAW' });
+      const {amount} = this.state
+      const {username} = this.props.user
+      axios.post('/api/deposit', {amount, username})
       .then((result) => {
-        console.log('result')
-      });
-
+        console.log('DEPOSIT COMPLETED', result)
+        
+      })
     }
     
     render() { 
@@ -61,7 +90,9 @@ class Dashboard extends Component {
       const { from, to, amount } = this.state;
       let signedIn = localStorage.getItem('jwtToken')
         return ( <div className="dashboard code">
-        <Nav />
+
+        <Nav logout={this.logout} uid={this.props.user}/>
+        
 
         {/* Spartan Banking */}
               {/* {localStorage.getItem('jwtToken') &&
@@ -86,18 +117,33 @@ class Dashboard extends Component {
               </tbody>
             </table> */}
 <div className="info">
-<article class="mw5 mw6-ns hidden ba mv4">
+<div class="mw9 center ph3-ns">
+  <div class="cf ph2-ns">
+    <div class="fl w-100 w-50-ns pa2">
+      <div class="bg-white pv4">
+      <article class="mw5 mw6-ns hidden ba mv4">
   <h1 class="f4 bg-near-black white mv0 pv2 ph3">Account Info</h1>
   <div class="pa3 bt">
     <p class="f6 f5-ns lh-copy measure mv0">
-       Balance : $10,000 <br/>
+       Checking Balance : {this.props.user.checkingBalance} <br/>
+       Savings Balance : {this.props.user.savingsBalance} <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.withdraw}>Withdraw</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.deposit}>Deposit</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Transfer</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.transfer}>Transfer</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
 
     </p>
   </div>
 </article>
+      </div>
+    </div>
+    <div class="fl w-100 w-50-ns pa2">
+      <div class="bg-white pv4">
+      <Action action={this.state.action} user={this.props.user.username} withdraw={this.withdrawMoney} deposit={this.depositMoney}/>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div class="flex justify-around">
   {/* <div class="outline w-25 pa3 mr2"> */}

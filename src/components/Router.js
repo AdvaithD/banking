@@ -4,6 +4,7 @@ import App from '../App'
 import Signup from './Signup'
 import Login from './Login'
 import Dashboard from './Dashboard'
+import Map from './Map'
 
 const Router = ({ onLogin, user }) => (
   <BrowserRouter>
@@ -12,6 +13,7 @@ const Router = ({ onLogin, user }) => (
       <Route path="/signup" component={Signup}/>
       <Route path='/login' render={ () => <Login onLogin={onLogin} />} />
       <Route path='/app' render={ () => <Dashboard user={user}/>} />
+      <Route path='/atm' render={ () => <Map/>} />
 
     </Switch>
   </BrowserRouter>

@@ -1,6 +1,8 @@
 var express = require('express')
 var router = express.Router()
 var mongoose = require('mongoose')
+// var User = require('../models/User')
+var User = mongoose.model('User')
 var Transaction = require('../models/Transaction.js')
 var passport = require('passport')
 require('../config/passport')(passport)
@@ -21,6 +23,28 @@ const getToken = (headers) => {
   }
 }
 
+router.post('/deposit', async function (req, res, next) {
+  try {
+    let uid = req.body.username
+    let amount = parseInt(req.body.amount)
+    let user = await User.findOneAndUpdate({ username: uid }, { $inc: { checkingBalance: amount } })
+    res.json({ success: true, user })
+  } catch (error) {
+    res.json({ success: false, error })
+  }
+})
+
+router.post('/withdraw', async function (req, res, next) {
+  try {
+    let uid = req.body.username
+    let amount = parseInt(req.body.amount)
+    let user = await User.findOneAndUpdate({ username: uid }, { $inc: { checkingBalance: -amount } })
+    res.json({ success: true, user })
+  } catch (error) {
+    res.json({ success: false, error })
+  }
+})
+
 router.get('/', function (req, res, next) {
 //   var token = getToken(req.headers)
 //   if (token) {
@@ -37,6 +61,7 @@ router.post('/', function (req, res) {
   console.log('New txn', req.body)
   //   var token = getToken(req.headers)
   //   if (token) {
+
   let txn = new Transaction({ from: req.body.from, to: req.body.to, amount: req.body.amount })
   //   Transaction.create(req.body, function (err, post) {
   //     if (err) return next(err)
