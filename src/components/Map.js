@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import StickyNav from './StickyNav';
 import axios from 'axios'
+import { GoogleMap, Marker } from "react-google-maps"
 // import './css/Signup.css'
 
 const apikey = 'AIzaSyCrode7wSxsfPX4IlbaVh2veVDC8ab0nRc'

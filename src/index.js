@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 // import App from './App';
+import Contact from './components/Contact'
 import Router from './components/Router'
 import Dashboard from './components/Dashboard'
 import Root from './components/Root'

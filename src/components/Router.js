@@ -4,6 +4,7 @@ import App from '../App'
 import Signup from './Signup'
 import Login from './Login'
 import Dashboard from './Dashboard'
+import Contact from './Contact'
 import Map from './Map'
 
 const Router = ({ onLogin, user }) => (
@@ -14,6 +15,7 @@ const Router = ({ onLogin, user }) => (
       <Route path='/login' render={ () => <Login onLogin={onLogin} />} />
       <Route path='/app' render={ () => <Dashboard user={user}/>} />
       <Route path='/atm' render={ () => <Map/>} />
+      <Route path='/contact' render={() => <Contact />} />
 
     </Switch>
   </BrowserRouter>

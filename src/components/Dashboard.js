@@ -129,7 +129,7 @@ class Dashboard extends Component {
        Savings Balance : {this.props.user.savingsBalance} <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.withdraw}>Withdraw</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.deposit}>Deposit</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.transfer}>Transfer</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.transfer}>Transfer</a>  <br/>
 
     </p>
   </div>
@@ -148,16 +148,15 @@ class Dashboard extends Component {
 <div class="flex justify-around">
   {/* <div class="outline w-25 pa3 mr2"> */}
   <article class="mw5 mw6-ns hidden ba mv4">
-  <h1 class="f4 bg-near-black white mv0 pv2 ph3">Actions</h1>
+  <h1 class="f4 bg-near-black white mv0 pv2 ph3">Bill Pay</h1>
   <div class="pa3 bt">
     <p class="f6 f5-ns lh-copy measure mv0">
        {/* Balance : $10,000 <br/> */}
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" >Withdraw</a> 
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Deposit</a> 
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Transfer</a> 
-       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" >Xfinity</a> 
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">PG $ E</a> <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Walmart</a> 
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">VISA</a>  <br/>
+       <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Mastercard</a> 
 
     </p>
   </div>
@@ -186,8 +185,17 @@ class Dashboard extends Component {
             {/* <button onClick={this.depositMoney}></button> */}
           </form>
         </div>
-  <div class="outline w-25 pa3 mr2">
-    <code>3</code>
+  <div class="w-25 pa3 mr2">
+    <code>
+    <table class="collapse ba br2 b--black-10 pv2 ph3 mt4">
+  <tbody><tr class="striped--near-white "><th class="pv2 ph3 tl f6 fw6 ttu">Description</th><th class="tr f6 ttu fw6 pv2 ph3">Amount</th></tr>
+  <tr class="striped--near-white "><td class="pv2 ph3">Checking Withdrawal</td><td class="pv2 ph3">- $75</td></tr>
+  <tr class="striped--near-white "><td class="pv2 ph3">Checking deposit</td><td class="pv2 ph3">+ $100</td></tr>
+  <tr class="striped--near-white "><td class="pv2 ph3">Transfer to advaith</td><td class="pv2 ph3">- $120</td></tr>
+  <tr class="striped--near-white "><td class="pv2 ph3">Bill paid PG&E</td><td class="pv2 ph3">- $100</td></tr>
+  <tr class="striped--near-white "><td class="pv2 ph3">Savings Withdrawal</td><td class="pv2 ph3">- $500</td></tr>
+</tbody></table>
+    </code>
   </div>
 </div>
 

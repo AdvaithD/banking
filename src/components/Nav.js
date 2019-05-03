@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 class Nav extends Component {
+  logout = () => {
+    localStorage.removeItem('jwtToken');
+        window.location.href = '/'
+  }
   render () {
+    let token = localStorage.getItem('jwtToken')
     return (
       <nav class="bg-black flex justify-between bb b--white-10">
         <a class="link white-70 hover-white no-underline flex items-center pa3" href="">
@@ -16,9 +22,12 @@ class Nav extends Component {
           </svg>
         </a>
         <div class="flex-grow pa3 flex items-center">
-          <a class="f6 link dib white dim mr3 mr4-ns" href="#0">About</a>
-          <a class="f6 link dib white dim mr3 mr4-ns" href="#0">Sign In</a>
-          <a class="f6 dib white bg-animate hover-bg-white hover-black no-underline pv2 ph4 br-pill ba b--white-20" onClick={this.props.logout}>Logout</a>
+        <a class="f6 link dib white dim mr3 mr4-ns" ><Link to="/app">Dashboard</Link></a>
+          <a class="f6 link dib white dim mr3 mr4-ns" ><Link to="/contact">Support</Link></a>
+          {token ? '' : (<a class="f6 link dib white dim mr3 mr4-ns"><Link to="/login">Login</Link></a>)}
+          {token ? (<a class="f6 dib white bg-animate hover-bg-white hover-black no-underline pv2 ph4 br-pill ba b--white-20" onClick={this.logout}>Logout</a>) : ''}
+          
+          {/* <a class="f6 dib white bg-animate hover-bg-white hover-black no-underline pv2 ph4 br-pill ba b--white-20" onClick={this.logout}>Logout</a> */}
         </div>
       </nav>
 
