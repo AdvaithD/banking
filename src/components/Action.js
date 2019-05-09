@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import axios from 'axios'
 class Action extends Component {
   constructor (props) {
     super(props)
@@ -8,14 +8,55 @@ class Action extends Component {
       to: '',
       amount: null }
   }
+  onChange = ({target}) => {
+    console.log(target)
+    let state = this.state
+    state[target.name]=target.value
+    this.setState(state)
+  }
+  transfer = (opts) => {
+    let {type, amount, to} = opts
+    switch(type){
+      case "WITHDRAW":
+      axios.post('/api/txn/newtxn', {
+        from: {id: this.props.user, type: "CHECKING"},
+        to: {id: undefined},
+        amount,
+        type: "WITHDRAW"
+      }).then(res => {
+        this.props.update(res.data.fromUser)
+      })
+      break;
+      case "DEPOSIT":
+      axios.post('/api/txn/newtxn', {
+        to: {id: this.props.user, type: "CHECKING"},
+        from: {id: undefined},
+        amount,
+        type: "DEPOSIT"
+      }).then(res => {
+        this.props.update(res.data.toUser)
+      })
+      break;
+      case "TRANSFER":
+      axios.post('/api/txn/newtxn', {
+        from: {id: this.props.user, type: "CHECKING"},
+        to: {id: to, type: "CHECKING"},
+        amount,
+        type: "TRANSFER"
+      }).then(res => {
+        this.props.update(res.data.fromUser)
+      })
+      break;
+    }
+  }
   render () {
     let { from, to, amount } = this.state
-    let { action } = this.props
+    let { action, transfer } = this.props
 
     if (action == 'WITHDRAW') {
       return (
         <div>
-          <form action="sign-up_submit" method="get">
+          <form >
             <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
               <legend class="ph0 mh0 fw6 clip">WITHDRAW</legend>
               <div class="mt3">
@@ -23,23 +64,23 @@ class Action extends Component {
                 <input class="pa2 input-reset ba bg-transparent w-100 measure" type="number" name="amount" value={amount} onChange={this.onChange} id="email-address" />
               </div>
             </fieldset>
-            <a class="f6 link dim ph3 pv2 mb2 dib white bg-black" onClick={this.props.withdrawMoney}>WITHDRAW</a>
+            <a class="f6 link dim ph3 pv2 mb2 dib white bg-black" onClick={e => {this.transfer({type: "WITHDRAW", amount})}}>WITHDRAW</a>
           </form>
         </div>
       )
     } else if (action == 'DEPOSIT') {
       return (
         <div>
-          <form action="sign-up_submit" method="get">
+          <form >
             <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
               <legend class="ph0 mh0 fw6 clip">DEPOSIT</legend>
               <div class="mt3">
                 <label class="db fw4 lh-copy f6" for="email-address">Deposit Amount</label>
-                <input class="pa2 input-reset ba bg-transparent w-100 measure" type="number" name="amount" value={amount} id="email-address" />
+                <input class="pa2 input-reset ba bg-transparent w-100 measure" type="number" onChange={this.onChange} name="amount" value={amount} id="email-address" />
               </div>
             </fieldset>
             <div class="mt3">
-              <a class="f6 link dim ba ph3 pv2 mb2 dib black" onClick={this.props.depositMoney}>DEPOSIT</a>
+              <a class="f6 link dim ba ph3 pv2 mb2 dib black" onClick={e => {this.transfer({type: "DEPOSIT", amount})}}>DEPOSIT</a>
 
             </div>
           </form>
@@ -48,7 +89,7 @@ class Action extends Component {
     } else if (action == 'TRANSFER') {
       return (
         <div>
-          <form onSubmit={this.deposit}>
+          <form>
             <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
               <legend class="ph0 mh0 fw6 clip">Transfer</legend>
               <div class="mt3">
@@ -65,7 +106,7 @@ class Action extends Component {
               </div>
 
             </fieldset>
-            <a class="f6 link dim ph3 pv2 mb2 dib white bg-black" onClick={this.transferMoney}>Transfer</a>
+            <a class="f6 link dim ph3 pv2 mb2 dib white bg-black" onClick={e =>{this.transfer({type: "TRANSFER", to, amount})}}>Transfer</a>
 
             {/* <button onClick={this.depositMoney}></button> */}
           </form>

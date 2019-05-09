@@ -2,8 +2,6 @@ var express = require('express')
 var router = express.Router()
 var mongoose = require('mongoose')
 var Book = require('../models/Book.js')
-var passport = require('passport')
-require('../config/passport')(passport)
 
 const getToken = (headers) => {
   if (headers && headers.authorization) {
@@ -18,19 +16,11 @@ const getToken = (headers) => {
   }
 }
 
-router.get('/', passport.authenticate('jwt', { session: false }), function (req, res) {
-  var token = getToken(req.headers)
-  if (token) {
-    Book.find(function (err, books) {
-      if (err) return next(err)
-      res.json(books)
-    })
-  } else {
-    return res.status(403).send({ success: false, msg: 'Unauthorized.' })
-  }
+router.get('/', function (req, res) {
+  res.json({ user: req.user })
 })
 
-router.post('/', passport.authenticate('jwt', { session: false }), function (req, res) {
+router.post('/', function (req, res) {
   var token = getToken(req.headers)
   if (token) {
     Book.create(req.body, function (err, post) {

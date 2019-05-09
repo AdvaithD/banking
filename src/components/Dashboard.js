@@ -21,10 +21,9 @@ class Dashboard extends Component {
 
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
-        axios.get('http://localhost:5000/api/book')
-          .then(res => {
-            this.setState({ books: res.data });
-            console.log(this.state.books);
+        axios.get('/api/book')
+          .then(result => {
+            this.props.onLogin(result.data.user)
           })
           .catch((error) => {
             if(error.response && error.response.status === 401) {
@@ -125,8 +124,8 @@ class Dashboard extends Component {
   <h1 class="f4 bg-near-black white mv0 pv2 ph3">Account Info</h1>
   <div class="pa3 bt">
     <p class="f6 f5-ns lh-copy measure mv0">
-       Checking Balance : {this.props.user.checkingBalance} <br/>
-       Savings Balance : {this.props.user.savingsBalance} <br/>
+       Checking Balance : {this.props.user && this.props.user.checkingBalance} <br/>
+       Savings Balance : {this.props.user && this.props.user.savingsBalance} <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.withdraw}>Withdraw</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Find ATM</a> <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.deposit}>Deposit</a> <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0">Support</a>  <br/>
        <a class="f6 link dim ba ph3 pv2 mb2 dib black" href="#0" onClick={this.transfer}>Transfer</a>  <br/>
@@ -138,7 +137,7 @@ class Dashboard extends Component {
     </div>
     <div class="fl w-100 w-50-ns pa2">
       <div class="bg-white pv4">
-      <Action action={this.state.action} user={this.props.user.username} withdraw={this.withdrawMoney} deposit={this.depositMoney}/>
+      <Action action={this.state.action} update={this.props.onLogin} user={this.props.user && this.props.user.username} />
       </div>
     </div>
   </div>

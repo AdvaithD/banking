@@ -1,10 +1,14 @@
 var mongoose = require('mongoose')
 
+var NewSchema = new mongoose.Schema({
+  id: String,
+  type: String
+})
+
 var TransactionSchema = new mongoose.Schema({
-  from: { type: String,
-    unique: false },
-  to: { type: String,
-    unique: false },
+  from: NewSchema,
+  type: { type: String },
+  to: NewSchema,
   amount: { type: Number },
   timestamp: { type: Date, default: Date.now }
 })

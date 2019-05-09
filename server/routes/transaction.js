@@ -10,73 +10,59 @@ var bodyParser = require('body-parser')
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-const getToken = (headers) => {
-  if (headers && headers.authorization) {
-    var parted = headers.authorization.split(' ')
-    if (parted.length === 2) {
-      return parted[1]
+router.get('/', async (req, res) => {
+  try {
+    console.log(req.user)
+    let transactions = await Transaction.find({ $or: [{ 'from.id': req.user.username }, { 'to.id': req.user.username }] })
+    res.status(200).send(transactions)
+  } catch (err) {
+    res.status(400).send({ err: err.toString() })
+  }
+})
+router.post('/newtxn', async function (req, res, next) {
+  let { from, to, amount, type } = req.body
+  console.log(req.user.username)
+  try {
+    if ([from.id, to.id].includes(req.user.username)) {
+      amount = parseInt(amount)
+      let newtxn = new Transaction(req.body)
+      let fromUser = from.id && await User.findOne({ username: from.id }); let toUser = to.id && await User.findOne({ username: to.id })
+      if (fromUser) {
+        if (from.type == 'CHECKING') {
+          if (fromUser.checkingBalance - amount < 0) {
+            throw new Error('not enough balance')
+          } else {
+            fromUser.checkingBalance -= amount
+            fromUser.save()
+          }
+        } else if (from.type == 'SAVINGS') {
+          if (fromUser.savingsBalance - amount < 0) {
+            throw new Error('not enough balance')
+          } else {
+            fromUser.savingsBalance -= amount
+            await fromUser.save()
+          }
+        }
+      }
+      if (toUser) {
+        if (to.type == 'CHECKING') {
+          toUser.checkingBalance += amount
+        } else if (to.type == 'SAVINGS') {
+          toUser.savingsBalance += amount
+        }
+        await toUser.save()
+      }
+
+      await newtxn.save()
+      res.status(200).json({ newtxn, fromUser, toUser })
     } else {
-      return null
+      throw new Error('unauthorized')
     }
-  } else {
-    return null
-  }
-}
-
-router.post('/deposit', async function (req, res, next) {
-  try {
-    let uid = req.body.username
-    let amount = parseInt(req.body.amount)
-    let user = await User.findOneAndUpdate({ username: uid }, { $inc: { checkingBalance: amount } })
-    res.json({ success: true, user })
   } catch (error) {
-    res.json({ success: false, error })
+    console.log(error)
+    error = error.toString()
+    res.status(400).json({ message: 'Failed transaction', error })
   }
-})
-
-router.post('/withdraw', async function (req, res, next) {
-  try {
-    let uid = req.body.username
-    let amount = parseInt(req.body.amount)
-    let user = await User.findOneAndUpdate({ username: uid }, { $inc: { checkingBalance: -amount } })
-    res.json({ success: true, user })
-  } catch (error) {
-    res.json({ success: false, error })
-  }
-})
-
-router.get('/', function (req, res, next) {
-//   var token = getToken(req.headers)
-//   if (token) {
-  Transaction.find(function (err, txns) {
-    if (err) return next(err)
-    res.json(txns)
-  })
-//   } else {
-  // return res.status(403).send({ success: false, msg: 'Unauthorized.' })
-//   }
-})
-
-router.post('/', function (req, res) {
-  console.log('New txn', req.body)
-  //   var token = getToken(req.headers)
-  //   if (token) {
-
-  let txn = new Transaction({ from: req.body.from, to: req.body.to, amount: req.body.amount })
-  //   Transaction.create(req.body, function (err, post) {
-  //     if (err) return next(err)
-  //     res.json(post)
-  //   })
-  txn.save(function (err) {
-    if (err) {
-      // return next(err)
-      console.log('ERROR!!!')
-    }
-    res.send('Transaction Created successfully')
-  })
-//   } else {
-  // return res.status(403).send({ success: false, msg: 'Unauthorized.' })
-//   }
 })
 
 module.exports = router

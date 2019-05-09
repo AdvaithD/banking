@@ -4,12 +4,14 @@ var favicon = require('serve-favicon')
 var logger = require('morgan')
 var bodyParser = require('body-parser')
 var auth = require('./routes/auth')
-
+var passport = require('passport')
+require('./config/passport')(passport)
 var book = require('./routes/book')
 var transaction = require('./routes/transaction')
 var ticket = require('./routes/ticket')
-var app = express()
 
+var app = express()
+const server = require('http').createServer(app)
 // mlab test one
 const mongoUrl = 'mongodb://admin:admin123@ds157544.mlab.com:57544/portfolio'
 var mongoose = require('mongoose')
@@ -25,17 +27,10 @@ app.use(express.static(path.join(__dirname, 'build')))
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-app.use('/api/book', book)
+app.use('/api/book', passport.authenticate('jwt', { session: false }), book)
 app.use('/api/auth', auth)
-app.use('/api/txn', transaction)
+app.use('/api/txn', passport.authenticate('jwt', { session: false }), transaction)
 app.use('/api/ticket', ticket)
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  var err = new Error('Not Found')
-  err.status = 404
-  next(err)
-})
 
 // Possible fix for rendering production version
 app.get('/', function (req, res) {
@@ -59,4 +54,6 @@ app.use(function (err, req, res, next) {
   })
 })
 
-module.exports = app
+server.listen(5000, () => {
+  console.log('listening on 5000')
+})
